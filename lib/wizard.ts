@@ -35,16 +35,16 @@ export interface ReleaseInfo {
 // the GitHub API is unreachable or rate-limited, so /download never renders
 // broken links just because that one request failed.
 const FALLBACK_RELEASE: ReleaseInfo = {
-  tag: "v1.0.7",
-  publishedAt: "2026-08-30T11:00:00Z",
-  htmlUrl: `${REPO_URL}/releases/tag/v1.0.7`,
+  tag: "v1.0.8",
+  publishedAt: "2026-09-06T10:21:00Z",
+  htmlUrl: `${REPO_URL}/releases/tag/v1.0.8`,
   live: false,
   assets: [
-    { name: "Wizard-v1.0.7-darwin-arm64.zip", url: `${REPO_URL}/releases/download/v1.0.7/Wizard-v1.0.7-darwin-arm64.zip`, sizeBytes: 6291456 },
-    { name: "Wizard-v1.0.7-darwin-amd64.zip", url: `${REPO_URL}/releases/download/v1.0.7/Wizard-v1.0.7-darwin-amd64.zip`, sizeBytes: 6606028 },
-    { name: "Wizard-v1.0.7-linux-amd64.zip", url: `${REPO_URL}/releases/download/v1.0.7/Wizard-v1.0.7-linux-amd64.zip`, sizeBytes: 6500352 },
-    { name: "Wizard-v1.0.7-linux-arm64.zip", url: `${REPO_URL}/releases/download/v1.0.7/Wizard-v1.0.7-linux-arm64.zip`, sizeBytes: 6081740 },
-    { name: "Wizard-v1.0.7-windows-amd64.zip", url: `${REPO_URL}/releases/download/v1.0.7/Wizard-v1.0.7-windows-amd64.zip`, sizeBytes: 6606028 },
+    { name: "Wizard-v1.0.8-darwin-arm64.zip", url: `${REPO_URL}/releases/download/v1.0.8/Wizard-v1.0.8-darwin-arm64.zip`, sizeBytes: 5805446 },
+    { name: "Wizard-v1.0.8-darwin-amd64.zip", url: `${REPO_URL}/releases/download/v1.0.8/Wizard-v1.0.8-darwin-amd64.zip`, sizeBytes: 6048068 },
+    { name: "Wizard-v1.0.8-linux-amd64.zip", url: `${REPO_URL}/releases/download/v1.0.8/Wizard-v1.0.8-linux-amd64.zip`, sizeBytes: 6178618 },
+    { name: "Wizard-v1.0.8-linux-arm64.zip", url: `${REPO_URL}/releases/download/v1.0.8/Wizard-v1.0.8-linux-arm64.zip`, sizeBytes: 5861810 },
+    { name: "Wizard-v1.0.8-windows-amd64.zip", url: `${REPO_URL}/releases/download/v1.0.8/Wizard-v1.0.8-windows-amd64.zip`, sizeBytes: 6302852 },
   ],
 };
 

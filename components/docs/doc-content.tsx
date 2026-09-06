@@ -39,7 +39,7 @@ export function DocContent({ markdown }: { markdown: string }) {
   return (
     <div className="doc-prose w-full max-w-full min-w-0 overflow-hidden break-words text-[15px] sm:text-[15.5px] leading-[1.75] text-white/80 font-normal">
       <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkMath]}
+        remarkPlugins={[remarkMath, remarkGfm]}
         rehypePlugins={[rehypeKatex]}
         components={{
           h1: ({ children }) => (

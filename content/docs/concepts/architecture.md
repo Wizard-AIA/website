@@ -90,7 +90,11 @@ Wizard incorporates a dual-retriever search pipeline combining exact lexical key
 1. **Dense Vector KNN (`sqlite-vec`):** Cosine distance vector indexing powered by native C/SQLite vector extensions.
 2. **Lexical Keyword Search (FTS5 BM25):** Full-text search matching precise column names, table identifiers, and analytical terms.
 3. **Reciprocal Rank Fusion (RRF):** Fuses dense and sparse rankings with standard smoothing constant $k=60$:
-   $$RRF(d) = \frac{1}{60 + \text{Rank}_{\text{dense}}(d)} + \frac{1}{60 + \text{Rank}_{\text{sparse}}(d)}$$
+
+   $$
+   RRF(d) = \frac{1}{60 + \text{Rank}_{\text{dense}}(d)} + \frac{1}{60 + \text{Rank}_{\text{sparse}}(d)}
+   $$
+
 4. **Cross-Encoder Reranking:** Applies FlashRank ONNX cross-attention scoring across the top candidate chunks to capture query-document semantic nuance.
 5. **Single-Flight Cache Stampede Protection:** Coalesces concurrent vectorization requests using `asyncio.Event` locks, preventing duplicate encoder calls.
 

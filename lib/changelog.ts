@@ -13,6 +13,27 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "v1.0.8",
+    tag: "v1.0.8",
+    kind: "feature",
+    title: "Systemic Execution Resilience, Pure Python Contracts & Autonomous Diagnostics",
+    date: "2026-09-06",
+    highlights: [
+      {
+        title: "Pristine Execution Engine & Monkeypatch Elimination",
+        body: "Purged all dynamic runtime monkeypatches from the Python execution engine, establishing a clean runtime where pandas/Polars methods, scikit-learn models, and statsmodels wrappers execute against pure, standard library contracts.",
+      },
+      {
+        title: "Universal Code Generation Invariants",
+        body: "Hardened code synthesis prompts with systemic engineering rules: explicit numeric casting for dirty datasets, automated NaN/inf replacement, robust 2D/1D coefficient shape flattening, and zero-assumption API contracts.",
+      },
+      {
+        title: "Context-Enriched Self-Correction & Deep Diagnostics",
+        body: "Supercharged autonomous error recovery with failed code traces and live runtime diagnostic introspection, allowing the agent to autonomously diagnose and self-repair edge cases across complex multi-step analytical plans without human intervention.",
+      },
+    ],
+  },
+  {
     version: "v1.0.7",
     tag: "v1.0.7",
     kind: "feature",

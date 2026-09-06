@@ -179,7 +179,7 @@ export function HeroSection() {
               className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-xs font-mono text-[#eca8d6] transition-all hover:scale-105"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[#eca8d6] animate-pulse" />
-              <span>v1.0.7 Released: Markdown Tables & Gemini Flash</span>
+              <span>v1.0.8 Released: Systemic Resilience & Bug Fixes</span>
               <ArrowRight className="w-3 h-3 ml-0.5" />
             </Link>
             <span className="hidden sm:inline text-white/30">•</span>
