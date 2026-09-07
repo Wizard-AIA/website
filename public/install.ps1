@@ -57,12 +57,12 @@ if (-not $tag) {
             $tag = $releaseJson.tag_name
         }
     } catch {
-        Write-WizardLog "Could not contact GitHub API, falling back to release baseline v1.0.9" "Yellow"
-        $tag = "v1.0.9"
+        Write-WizardLog "Could not contact GitHub API, falling back to release baseline v1.0.10" "Yellow"
+        $tag = "v1.0.10"
     }
 }
 
-if (-not $tag) { $tag = "v1.0.9" }
+if (-not $tag) { $tag = "v1.0.10" }
 if (-not $tag.StartsWith("v")) { $tag = "v$tag" }
 
 Write-WizardLog "Target release: $tag" "Green"
@@ -140,8 +140,10 @@ if ($wizardSrc -and (Test-Path $wizardSrc)) {
 if (-not $pkgDir -or -not (Test-Path $pkgDir)) {
     $pkgDir = Split-Path (Split-Path $wizardSrc -Parent) -Parent
 }
-[Environment]::SetEnvironmentVariable("WIZARD_ROOT", $pkgDir, "User")
-$env:WIZARD_ROOT = $pkgDir
+$wizardRoot = Join-Path $installDir "current"
+if (-not (Test-Path $wizardRoot)) { $wizardRoot = $pkgDir }
+[Environment]::SetEnvironmentVariable("WIZARD_ROOT", $wizardRoot, "User")
+$env:WIZARD_ROOT = $wizardRoot
 
 # 6. Add to User PATH persistently
 $userPath = [Environment]::GetEnvironmentVariable("Path", "User")

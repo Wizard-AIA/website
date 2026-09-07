@@ -13,6 +13,27 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "v1.0.10",
+    tag: "v1.0.10",
+    kind: "feature",
+    title: "Verified CLI Updates & Production Readiness",
+    date: "2026-09-07",
+    highlights: [
+      {
+        title: "Verified Release Updates",
+        body: "wizard update --check reports new releases. Managed installations stage a platform package, verify its SHA-256 checksum, and only then activate it while retaining the prior package for rollback.",
+      },
+      {
+        title: "Production Readiness Controls",
+        body: "Release gates add sandbox readiness checks, bounded request telemetry, backup lifecycle controls, feature kill switches, scoped cache isolation, and fail-safe runtime fallback.",
+      },
+      {
+        title: "Traceable Retrieval",
+        body: "Hybrid document retrieval now exposes source-aware citations and retrieval provenance for grounded answers.",
+      },
+    ],
+  },
+  {
     version: "v1.0.9",
     tag: "v1.0.9",
     kind: "feature",

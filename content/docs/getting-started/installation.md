@@ -117,7 +117,7 @@ curl -sSL -O https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/Wi
 
 ```bash
 unzip Wizard-darwin-arm64.zip
-cd Wizard-v1.0.9-darwin-arm64
+cd Wizard-v1.0.10-darwin-arm64
 
 ./cli/wizard init
 ./cli/wizard start

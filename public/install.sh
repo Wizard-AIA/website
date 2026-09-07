@@ -68,7 +68,7 @@ if [ -z "${TAG}" ]; then
     if command -v curl >/dev/null 2>&1; then
         LATEST_TAG=$(curl -sSL "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null | grep '"tag_name":' | head -n 1 | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/' || true)
     fi
-    TAG="${LATEST_TAG:-v1.0.9}"
+    TAG="${LATEST_TAG:-v1.0.10}"
 fi
 
 # Ensure tag has 'v' prefix
@@ -126,7 +126,7 @@ fi
 
 if [ -n "${PACKAGE_DIR}" ] && [ -d "${PACKAGE_DIR}" ]; then
     ln -sfn "${PACKAGE_DIR}" "${INSTALL_DIR}/current"
-    WIZARD_SRC_BIN="${PACKAGE_DIR}/cli/wizard"
+    WIZARD_SRC_BIN="${INSTALL_DIR}/current/cli/wizard"
 else
     WIZARD_SRC_BIN=$(find "${INSTALL_DIR}" -type f -name "wizard" 2>/dev/null | head -n 1)
 fi
@@ -144,7 +144,7 @@ fi
 # where the executable is copied or symlink resolution is unavailable, and it
 # lets `wizard init`/`wizard start` locate the bundled backend from any cwd.
 if [ -n "${PACKAGE_DIR:-}" ] && [ -d "${PACKAGE_DIR}" ]; then
-    WIZARD_ROOT="${PACKAGE_DIR}"
+    WIZARD_ROOT="${INSTALL_DIR}/current"
 else
     WIZARD_ROOT="$(dirname "$(dirname "${WIZARD_SRC_BIN}")")"
 fi

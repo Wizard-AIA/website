@@ -145,11 +145,14 @@ wizard logs --tail 50
 ---
 
 ### `wizard update`
-Performs a fast-forward Git synchronization, updates backend and frontend dependencies according to lockfiles, and automatically restarts background daemons if previously active.
+Checks for and applies an available release. Installed release packages are downloaded into a staging directory, verified against the published SHA-256 checksum, then atomically activated while the previous package is retained for rollback. Source checkouts instead perform their normal fast-forward Git synchronization and dependency refresh.
 
 ```bash
-wizard update
+wizard update --check  # report whether a newer release is available
+wizard update          # apply the available release or update a source checkout
 ```
+
+Homebrew-managed installations should use `brew upgrade wizard`.
 
 ---
 
