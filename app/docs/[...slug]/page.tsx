@@ -84,7 +84,7 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
 
         {/* Edit on GitHub link */}
         <div className="mt-14 flex items-center justify-between border-t border-white/10 pt-6 text-xs text-white/40">
-          <span>Reviewed for Wizard v1.0.8</span>
+          <span>Reviewed for Wizard v1.0.9</span>
           <a
             href={`${DOCS_EDIT_BASE_URL}/${slug}.md`}
             target="_blank"

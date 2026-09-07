@@ -105,6 +105,12 @@ export default async function DownloadPage() {
           />
         </Reveal>
 
+        <Reveal delay={125} className="mt-4">
+          <p className="text-sm text-muted-foreground">
+            Homebrew, Linux, Windows, and Scoop installations are global. After opening a new terminal when prompted, run <span className="font-mono text-foreground">wizard init</span> and <span className="font-mono text-foreground">wizard start</span> from any directory — no checkout or <span className="font-mono text-foreground">cd</span> is required.
+          </p>
+        </Reveal>
+
         {/* Prerequisites */}
         <Reveal delay={150} className="mt-6 flex gap-3 rounded-lg border border-border bg-secondary/40 p-5">
           <Info className="h-4 w-4 shrink-0 mt-0.5 text-muted-foreground" />

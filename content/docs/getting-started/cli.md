@@ -32,14 +32,14 @@ Instead of requiring manual multi-terminal script invocations (`uvicorn` + `next
 - **Zero Orphaned Subprocesses**: When `wizard stop` or a termination signal is received, the supervisor sends `SIGTERM` to the entire process group, guaranteeing that background Python runtimes or host worker sockets do not leak.
 - **Port Conflict Resolution**: Probes availability for ports 8000 (backend) and 3000 (frontend) before launching, reporting the blocking PID if occupied.
 - **Automatic Log Rotation**: Rotates `backend.log`, `frontend.log`, and `daemon.log` at 10MB bounds, preserving previous logs as `.1.log` to prevent disk saturation.
-- **Global Path Resolution**: Automatically detects project roots from both current working directories and Homebrew Cellar installations (`/opt/homebrew/Cellar/wizard/...`).
+- **Global Path Resolution**: Automatically detects project roots from current working directories, Homebrew Cellar installations (`/opt/homebrew/Cellar/wizard/...`), and Linux/Windows packaged installations. `WIZARD_ROOT` is persisted by the installers when executable or symlink resolution cannot identify the checkout.
 
 ---
 
 ## 2. Command Index & Syntax
 
 ### `wizard init`
-Initializes local runtime environments, validates system dependencies, generates `backend/.env`, sets up managed virtual environments, installs requirements, and compiles frontend bundles.
+Initializes local runtime environments, validates system dependencies, generates `backend/.env`, sets up managed virtual environments, installs requirements, and compiles frontend bundles. With no configuration flags in a terminal, it opens an interactive setup for provider, privacy mode, models, embeddings, endpoints, and API credentials.
 
 ```bash
 wizard init [flags]
@@ -61,6 +61,19 @@ wizard init [flags]
 | `--gateway-url` | `string` | Sets OpenAI-compatible gateway endpoint URL (Groq, Together, vLLM, OpenRouter). | `""` |
 | `--gateway-key` | `string` | Injects authentication bearer token for custom gateway. | `""` |
 | `--base-url` | `string` | Overrides base URL for the active provider. | `""` |
+| `--interactive` | `bool` | Forces the guided setup prompts even when other flags are supplied. | `false` |
+| `--non-interactive` | `bool` | Disables prompts for scripts and CI; missing values use defaults. | `false` |
+| `--lmstudio-key` | `string` | Injects an LM Studio API key when the provider requires one. | `""` |
+
+### `wizard delete`
+
+Stops Wizard and removes its managed user configuration, credentials, connections, skills, logs, managed virtual environment, and checkout `backend/.env`. The installed checkout and CLI binary remain available for a later `wizard init`.
+
+```bash
+wizard delete          # asks for confirmation in an interactive terminal
+wizard delete --yes    # suitable for automation
+wizard delete --keep-env
+```
 
 ---
 
@@ -206,4 +219,3 @@ The `wizard` binary returns standard POSIX exit codes suitable for CI/CD pipelin
 | `1` | General Operational Error | Run `wizard doctor` to view failure diagnostics. |
 | `2` | Port Conflict Detected | Port 8000 or 3000 is occupied; terminate conflicting process or pass `--backend-port`. |
 | `3` | Environment Prerequisite Missing | Install required runtime (Python 3.12, Node.js 20, or uv). |
-

@@ -18,7 +18,7 @@ const CLI_COMMANDS = [
   {
     command: "wizard init",
     badge: "Lifecycle",
-    summary: "Bootstraps local environment, verifies toolchain, creates virtualenv, and compiles workbenches.",
+    summary: "Guides first-run configuration, verifies toolchain, creates virtualenv, and compiles workbenches.",
     description:
       "Validates Python 3.11+, Node 20+, uv, pnpm, and optional Ollama/Docker. Copies backend/.env.example if missing, builds the Next.js production frontend bundle, and registers service defaults.",
     flags: [
@@ -31,6 +31,9 @@ const CLI_COMMANDS = [
       { flag: "--openai-key <key>", desc: "Sets OpenAI API key" },
       { flag: "--gateway-url <url>", desc: "Endpoint URL for custom OpenAI-compatible gateway (Groq, vLLM, OpenRouter)" },
       { flag: "--gateway-key <key>", desc: "Bearer authorization token for custom gateway" },
+      { flag: "--interactive", desc: "Forces guided prompts for provider, privacy, models, embeddings, and credentials" },
+      { flag: "--non-interactive", desc: "Disables prompts for CI and scripted installs" },
+      { flag: "--lmstudio-key <key>", desc: "Sets LM Studio API key" },
       { flag: "--pull-models", desc: "Triggers automated background pull of default reasoning, coding & embedding weights via Ollama" },
       { flag: "--skip-frontend", desc: "Skips Node.js dependency installation and frontend bundle compilation" },
       { flag: "--skip-backend", desc: "Skips Python virtualenv creation and package installation" },
@@ -50,6 +53,17 @@ const CLI_COMMANDS = [
       { flag: "--data-mode <mode>", desc: "Overrides privacy data mode for this execution run" },
       { flag: "--embedding-provider <name>", desc: "Overrides active embedding provider for this execution run" },
       { flag: "--embedding-model <model>", desc: "Overrides active embedding model for this execution run" },
+    ],
+  },
+  {
+    command: "wizard delete",
+    badge: "Lifecycle",
+    summary: "Stops services and removes Wizard-managed local state safely.",
+    description:
+      "Requests confirmation in a terminal, then removes user configuration, credentials, connections, skills, logs, managed virtualenv, and backend/.env while preserving the installed checkout and CLI binary.",
+    flags: [
+      { flag: "--yes", desc: "Skip confirmation; useful for automation" },
+      { flag: "--keep-env", desc: "Preserve backend/.env while removing other managed state" },
     ],
   },
   {
@@ -207,7 +221,7 @@ export default function CliPage() {
           <Reveal>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-display text-white">Command Reference</h2>
-              <span className="text-xs font-mono text-white/40">10 Subcommands</span>
+              <span className="text-xs font-mono text-white/40">12 Subcommands</span>
             </div>
           </Reveal>
           

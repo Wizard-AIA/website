@@ -56,6 +56,8 @@ wizard init
 wizard start
 ```
 
+The installer registers the CLI and bundled checkout globally. After opening a new terminal if your shell was not reloaded automatically, both commands work from any directory; no `cd` into the extracted package is needed.
+
 ---
 
 ### Channel C: Windows 1-Command Installer (PowerShell & Scoop)
@@ -74,6 +76,8 @@ Once complete, run:
 wizard init
 wizard start
 ```
+
+The installer persists the bundled checkout root and adds `wizard` to the user PATH, so initialization and startup work from any directory in a new PowerShell session.
 
 #### Option 2: Scoop Package Manager
 If you use [Scoop](https://scoop.sh) on Windows:
@@ -113,7 +117,7 @@ curl -sSL -O https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/Wi
 
 ```bash
 unzip Wizard-darwin-arm64.zip
-cd Wizard-v1.0.8-darwin-arm64
+cd Wizard-v1.0.9-darwin-arm64
 
 ./cli/wizard init
 ./cli/wizard start
@@ -234,4 +238,3 @@ For classified or strict zero-egress networks:
 2. Configure `DATA_MODE=local-only` in `backend/.env`.
 3. Pre-load local GGUF models into Ollama or LM Studio (`ollama pull qwen2.5:3b && ollama pull qwen2.5-coder:7b`).
 4. Wizard will enforce a strict zero-outbound network policy across all agent nodes and tools.
-

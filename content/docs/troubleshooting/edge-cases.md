@@ -10,6 +10,10 @@ Wizard is engineered around deterministic containment, graceful degradation, and
 - **Symptom**: Running `wizard start` or `wizard doctor` from arbitrary directories outside a repository clone.
 - **Resolution**: The `wizard` Go binary resolves its executable symlink via `os.Executable()`, inspecting `/opt/homebrew/Cellar/wizard/...` or local path layouts to anchor root directories automatically.
 
+### Linux or Windows Global Execution Outside the Install Folder
+- **Symptom**: Running `wizard init` or `wizard start` after using the one-command installer from a project directory or a fresh terminal.
+- **Resolution**: The installer persists `WIZARD_ROOT` alongside the user PATH entry. The CLI uses that root when Windows has copied the executable into `bin` or when a shell cannot resolve the package symlink. Open a new terminal after installation, then run `wizard init` and `wizard start` from any directory.
+
 ### Port Conflicts (Ports 8000 & 3000 Occupied)
 - **Symptom**: CLI exits with code `2` (`PORT_CONFLICT`).
 - **Diagnosis**: Run `wizard doctor` to view which process PID is holding the port.

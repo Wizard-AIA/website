@@ -13,6 +13,27 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "v1.0.9",
+    tag: "v1.0.9",
+    kind: "feature",
+    title: "Interactive Setup, Global Installation & Safe Workspace Cleanup",
+    date: "2026-09-07",
+    highlights: [
+      {
+        title: "Interactive First-Run Configuration",
+        body: "Running wizard init now guides you through provider, privacy mode, manager and worker models, embeddings, endpoints, and API credentials. Explicit flags and --non-interactive remain available for automation.",
+      },
+      {
+        title: "Install Once, Run Anywhere",
+        body: "Linux and Windows installers persist the bundled checkout root, while the CLI resolves Homebrew and packaged layouts automatically. After installation, wizard init and wizard start work from any directory.",
+      },
+      {
+        title: "Guarded Local Cleanup",
+        body: "The new wizard delete command stops services and removes Wizard-managed local state with confirmation, --yes, and --keep-env controls while leaving the installed checkout and binary intact.",
+      },
+    ],
+  },
+  {
     version: "v1.0.8",
     tag: "v1.0.8",
     kind: "feature",

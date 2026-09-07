@@ -127,7 +127,7 @@ const jsonLd = {
       description: 'An open-source local AI Data Analyst workspace that investigates, writes and executes Python/SQL code, verifies results, and renders interactive visualizations.',
       url: 'https://wizardw2.vercel.app',
       downloadUrl: 'https://wizardw2.vercel.app/download',
-      softwareVersion: '1.0.8',
+      softwareVersion: '1.0.9',
       license: 'https://opensource.org/licenses/BSD-3-Clause',
       author: {
         '@type': 'Person',
