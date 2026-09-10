@@ -13,6 +13,27 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "v1.0.11",
+    tag: "v1.0.11",
+    kind: "feature",
+    title: "Release Reliability & Data Integrity Fixes",
+    date: "2026-09-10",
+    highlights: [
+      {
+        title: "Reliable Packaged Setup",
+        body: "Cloud and hybrid release archives now include optional provider dependencies, while daemon status, duplicate-start protection, and clean shutdown work reliably.",
+      },
+      {
+        title: "Safer Configuration",
+        body: "Interactive API-key entry is hidden, saved embedding models can be cleared, and release metadata is synchronized across installers and platforms.",
+      },
+      {
+        title: "Correct Data Handling",
+        body: "Currency-formatted values are normalized deterministically before automatic cleaning so existing financial amounts are preserved.",
+      },
+    ],
+  },
+  {
     version: "v1.0.10",
     tag: "v1.0.10",
     kind: "feature",

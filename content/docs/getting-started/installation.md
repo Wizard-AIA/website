@@ -11,7 +11,7 @@ Before installing Wizard, verify your system matches the runtime requirements fo
 | Requirement | Minimum | Recommended | Notes |
 |---|---|---|---|
 | **Operating System** | macOS 12+ (Apple Silicon / Intel), Linux (Ubuntu 20.04+, Debian 11+, RHEL 8+, Alpine 3.18+), Windows 10/11 (x64) | macOS Sonoma (M2/M3/M4) or Linux x86_64 | Native OS sandboxing is enforced on macOS (`sandbox-exec`) and Linux (`landlock`/`seccomp`). |
-| **Python Runtime** | Python 3.11+ | Python 3.12 with `uv` package manager | Required for Host Execution Backend. Container mode requires no host Python. |
+| **Python Runtime** | Python 3.12+ | Python 3.12 with `uv` package manager | Required for Host Execution Backend. Container mode requires no host Python. |
 | **Node.js** | Node.js v20.0.0+ | Node.js v22 LTS with `pnpm` v10+ | Required only when building frontend from source or modifying UI workbenches. |
 | **Hardware Resources** | 4 CPU Cores, 8 GB RAM | 8+ Cores, 16 GB+ Unified Memory | Local LLM inference (`3B`–`7B`) benefits significantly from Apple Silicon Unified Memory or NVIDIA CUDA GPUs. |
 | **Container Engine** *(Optional)* | Docker Engine 24.0+ & Docker Compose v2+ | Docker Engine 27+ with Colima / OrbStack (macOS) | Required only when running `EXECUTION_BACKEND=docker`. |
@@ -117,7 +117,7 @@ curl -sSL -O https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/Wi
 
 ```bash
 unzip Wizard-darwin-arm64.zip
-cd Wizard-v1.0.10-darwin-arm64
+cd Wizard-v1.0.11-darwin-arm64
 
 ./cli/wizard init
 ./cli/wizard start

@@ -20,7 +20,7 @@ const CLI_COMMANDS = [
     badge: "Lifecycle",
     summary: "Guides first-run configuration, verifies toolchain, creates virtualenv, and compiles workbenches.",
     description:
-      "Validates Python 3.11+, Node 20+, uv, pnpm, and optional Ollama/Docker. Copies backend/.env.example if missing, builds the Next.js production frontend bundle, and registers service defaults.",
+      "Validates Python 3.12+, Node 20+, uv, pnpm, and optional Ollama/Docker. Copies backend/.env.example if missing, builds the Next.js production frontend bundle, and registers service defaults.",
     flags: [
       { flag: "--provider <name>", desc: "Primary LLM provider (ollama, lmstudio, gemini, anthropic, openai, custom_gateway)" },
       { flag: "--data-mode <mode>", desc: "Data residency policy (local-only, hybrid, cloud-only)" },
