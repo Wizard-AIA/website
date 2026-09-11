@@ -13,6 +13,27 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "v1.0.12",
+    tag: "v1.0.12",
+    kind: "feature",
+    title: "Windows Setup & Python Compatibility Fixes",
+    date: "2026-09-11",
+    highlights: [
+      {
+        title: "Reliable Windows Setup",
+        body: "Wizard now refreshes user and system PATH values after Winget installs and checks common Python, uv, pnpm, and Winget locations in the same setup run.",
+      },
+      {
+        title: "Reuse Compatible Python",
+        body: "Any usable Python 3.12 or newer, including Python 3.13 and 3.14, is reused instead of being replaced with a separate 3.12 installation.",
+      },
+      {
+        title: "Store Alias Recovery",
+        body: "The Windows Python launcher and versioned interpreters such as python3.14 are detected even when the Microsoft Store App Execution Alias shadows python3.exe.",
+      },
+    ],
+  },
+  {
     version: "v1.0.11",
     tag: "v1.0.11",
     kind: "feature",
