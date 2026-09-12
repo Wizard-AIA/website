@@ -16,3 +16,5 @@ node_modules
 out/
 *.tsbuildinfo
 .DS_Store
+# Local Claude Code plugin/skill enablement (per-machine, not shared)
+.claude/
