@@ -1,6 +1,8 @@
 // Shared constants and the GitHub release lookup for /download and /cli.
 // Verified against the repo directly (gh api, cli/README.md, README.md).
 
+import releaseData from "./release.json";
+
 export const REPO_URL = "https://github.com/Wizard-AIA/Wizard-w2";
 export const WEBSITE_REPO_URL = "https://github.com/Wizard-AIA/website";
 export const DOCS_EDIT_BASE_URL = `${WEBSITE_REPO_URL}/edit/main/content/docs`;
@@ -31,21 +33,22 @@ export interface ReleaseInfo {
   live: boolean;
 }
 
-// Pinned to releases/latest at the time this page was written. Used only if
-// the GitHub API is unreachable or rate-limited, so /download never renders
-// broken links just because that one request failed.
+// The latest release as recorded in lib/release.json, which the "Sync release"
+// workflow regenerates from the release's own release.json after every Wizard
+// release. It is the single place the site learns a version, tag or checksum
+// from: nothing else in the site hardcodes one. Used for the version shown on
+// pages and, if the GitHub API is unreachable or rate-limited, so /download
+// never renders broken links just because that one request failed.
+export const LATEST_VERSION: string = releaseData.version;
+export const LATEST_TAG: string = releaseData.tag;
+
 const FALLBACK_RELEASE: ReleaseInfo = {
-  tag: "v1.0.12",
-  publishedAt: "2026-09-11T00:00:00Z",
-  htmlUrl: `${REPO_URL}/releases/tag/v1.0.12`,
+  tag: releaseData.tag,
+  publishedAt: "",
+  htmlUrl: `${REPO_URL}/releases/tag/${releaseData.tag}`,
   live: false,
-  assets: [
-    { name: "Wizard-v1.0.12-darwin-arm64.zip", url: `${REPO_URL}/releases/download/v1.0.12/Wizard-v1.0.12-darwin-arm64.zip`, sizeBytes: 6452365 },
-    { name: "Wizard-v1.0.12-darwin-amd64.zip", url: `${REPO_URL}/releases/download/v1.0.12/Wizard-v1.0.12-darwin-amd64.zip`, sizeBytes: 6824346 },
-    { name: "Wizard-v1.0.12-linux-amd64.zip", url: `${REPO_URL}/releases/download/v1.0.12/Wizard-v1.0.12-linux-amd64.zip`, sizeBytes: 6760036 },
-    { name: "Wizard-v1.0.12-linux-arm64.zip", url: `${REPO_URL}/releases/download/v1.0.12/Wizard-v1.0.12-linux-arm64.zip`, sizeBytes: 6277760 },
-    { name: "Wizard-v1.0.12-windows-amd64.zip", url: `${REPO_URL}/releases/download/v1.0.12/Wizard-v1.0.12-windows-amd64.zip`, sizeBytes: 6901155 },
-  ],
+  // size is optional in release.json (release.py omits it when it had no archives to measure)
+  assets: (releaseData.assets as { name: string; url: string; size?: number }[]).map((a) => ({ name: a.name, url: a.url, sizeBytes: a.size ?? 0 })),
 };
 
 export async function getLatestRelease(): Promise<ReleaseInfo> {

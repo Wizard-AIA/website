@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { HeroTerminal } from "@/components/hero-terminal";
+import { RELEASES } from "@/lib/changelog";
 
 const words = ["reason", "verify", "adapt", "explain"];
 
@@ -179,7 +180,7 @@ export function HeroSection() {
               className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-xs font-mono text-[#eca8d6] transition-all hover:scale-105"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[#eca8d6] animate-pulse" />
-              <span>v1.0.12 Released: Windows Setup & Python Compatibility Fixes</span>
+              <span>{RELEASES[0].version} Released: {RELEASES[0].title}</span>
               <ArrowRight className="w-3 h-3 ml-0.5" />
             </Link>
             <span className="hidden sm:inline text-white/30">•</span>
@@ -225,12 +226,12 @@ export function HeroSection() {
                     {
                       id: "brew",
                       label: "macOS (Brew)",
-                      command: "brew tap Wizard-AIA/wizard && brew install wizard",
+                      command: "brew install Wizard-AIA/wizard/wizard",
                     },
                     {
                       id: "linux",
                       label: "Linux (Curl)",
-                      command: "curl -fsSL https://wizardw2.vercel.app/install.sh | bash",
+                      command: "curl -fsSL https://wizardw2.vercel.app/install.sh | sh",
                     },
                     {
                       id: "windows",

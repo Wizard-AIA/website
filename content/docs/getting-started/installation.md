@@ -20,110 +20,99 @@ Before installing Wizard, verify your system matches the runtime requirements fo
 
 ## 2. Installation Channels
 
-Choose the installation channel that best aligns with your infrastructure policies:
+Nothing below needs administrator rights. Every channel installs the same release archive, and the installers check its SHA-256 against the release's `SHA256SUMS` before unpacking anything.
+
+The requirements above are minimums. `wizard init` uses whatever Python, Node.js, `uv` and `pnpm` your machine already has (nvm, fnm, Volta, Homebrew and system installs are all found), and only offers to install what is missing, at the current release.
 
 ### Channel A: Homebrew (macOS & Linux)
 
-The official Homebrew tap delivers pre-compiled, self-contained releases with global binary symlinking:
-
 ```bash
-# 1. Tap the official Wizard tap repository
-brew tap Wizard-AIA/wizard
-
-# 2. Install the Wizard suite
-brew install wizard
-
-# 3. Initialize workspace and launch
+brew install Wizard-AIA/wizard/wizard
 wizard init
 wizard start
 ```
 
+Upgrade with `brew update && brew upgrade wizard`, then run `wizard init` again (your settings are kept). Uninstall with `brew uninstall wizard`. Homebrew owns those files, so `wizard update` and `wizard uninstall` point you at these commands instead of changing them.
+
 ---
 
-### Channel B: Linux 1-Command Universal Installer (Curl)
+### Channel B: Linux and macOS installer script
 
-For all Linux distributions (Ubuntu, Debian, Fedora, Arch, RHEL, Alpine, Pop!_OS), install with a single shell command:
+No Homebrew needed. It installs into `~/.wizard`, picks the archive for your CPU, verifies the checksum, and sets up your shell's PATH (zsh, bash, fish or plain `sh`):
 
 ```bash
-# Automatically detects architecture (x86_64 or aarch64), verifies checksums, and configures PATH
-curl -fsSL https://wizardw2.vercel.app/install.sh | bash
+curl -fsSL https://wizardw2.vercel.app/install.sh | sh
 ```
 
-Once installed, initialize and launch:
+Options go after `sh -s --`:
+
+```bash
+curl -fsSL https://wizardw2.vercel.app/install.sh | sh -s -- --version 1.0.13 --no-modify-path
+# --version X.Y.Z   --install-dir DIR   --no-modify-path   --force   --verbose
+```
+
+Open a new terminal (or run the `. ~/.wizard/env` line the installer prints) and both commands work from any directory:
 
 ```bash
 wizard init
 wizard start
 ```
 
-The installer registers the CLI and bundled checkout globally. After opening a new terminal if your shell was not reloaded automatically, both commands work from any directory; no `cd` into the extracted package is needed.
+Running the installer again is safe: it never duplicates the PATH entry, and it keeps your settings. `WIZARD_VERSION`, `WIZARD_INSTALL_DIR` and `WIZARD_NO_MODIFY_PATH` are the environment-variable forms of the options, and `WIZARD_RELEASE_BASE_URL` points the installer at an internal mirror.
 
 ---
 
-### Channel C: Windows 1-Command Installer (PowerShell & Scoop)
+### Channel C: Windows (PowerShell or Scoop)
 
-#### Option 1: Native PowerShell 1-Liner
-Open PowerShell (Terminal) and run:
+#### Option 1: PowerShell 5.1 or 7+
 
 ```powershell
-# Automatically downloads latest release, extracts to %LOCALAPPDATA%\Wizard, and registers global PATH
 irm https://wizardw2.vercel.app/install.ps1 | iex
 ```
 
-Once complete, run:
+It installs into `%LOCALAPPDATA%\Wizard` and adds that to your user PATH (your existing `%VARIABLES%` entries are preserved). Open a new PowerShell window, then:
 
 ```powershell
 wizard init
 wizard start
 ```
 
-The installer persists the bundled checkout root and adds `wizard` to the user PATH, so initialization and startup work from any directory in a new PowerShell session.
-
-#### Option 2: Scoop Package Manager
-If you use [Scoop](https://scoop.sh) on Windows:
+With options:
 
 ```powershell
-scoop install https://wizardw2.vercel.app/wizard.json
+& ([scriptblock]::Create((irm https://wizardw2.vercel.app/install.ps1))) -Version 1.0.13 -NoModifyPath
+```
+
+Windows on ARM is not supported yet; the installer says so and exits with code 3 instead of downloading anything.
+
+#### Option 2: Scoop
+
+```powershell
+scoop install https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/wizard.json
 wizard init
 wizard start
 ```
+
+Upgrade with `scoop update wizard`.
 
 ---
 
-### Channel D: Standalone Release Packages (Zero-Compiler Deployment)
+### Channel D: Manual download
 
-Standalone release packages bundle the pre-compiled `wizard` Go binary, backend application code, and optimized production Next.js frontend builds without requiring Git or Go compilers.
-
-1. Download the verified package for your operating system from the [Download Hub](/download):
+Take the archive for your platform (`Wizard-v<version>-<os>-<arch>.zip`) and `SHA256SUMS` from the [latest release](https://github.com/Wizard-AIA/Wizard-w2/releases/latest), check the archive against the checksum file, then extract it:
 
 ```bash
-# macOS (Apple Silicon ARM64)
-curl -sSL -O https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/Wizard-darwin-arm64.zip
+# Checks only the archive you downloaded; a mismatch prints FAILED and exits 1
+sha256sum -c --ignore-missing SHA256SUMS        # Linux
+shasum -a 256 -c --ignore-missing SHA256SUMS    # macOS
 
-# macOS (Intel x86_64)
-curl -sSL -O https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/Wizard-darwin-amd64.zip
-
-# Linux (x86_64)
-curl -sSL -O https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/Wizard-linux-amd64.zip
-
-# Linux (ARM64)
-curl -sSL -O https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/Wizard-linux-arm64.zip
-
-# Windows (x86_64)
-curl -sSL -O https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/Wizard-windows-amd64.zip
-```
-
-2. Extract and initialize the service:
-
-```bash
-unzip Wizard-darwin-arm64.zip
-cd Wizard-v1.0.12-darwin-arm64
-
+unzip Wizard-v1.0.13-darwin-arm64.zip
+cd Wizard-v1.0.13-darwin-arm64
 ./cli/wizard init
 ./cli/wizard start
 ```
 
-3. Open **http://localhost:3000** in your browser.
+Then open **http://localhost:3000** in your browser. A manual install is not on your PATH and `wizard update` will not manage it; use Channel B if you want that.
 
 ---
 
@@ -172,7 +161,7 @@ cd Wizard-w2
 
 # 2. Build the Go CLI supervisor
 cd cli
-go build -ldflags "-s -w -X wizard/internal/compat.BuildCompatVersion=v4.0.0" -o wizard ./cmd/wizard
+go build -ldflags "-X wizard/internal/compat.CompatAPIVersion=4.0.0" -o wizard ./cmd/wizard
 cd ..
 
 # 3. Initialize dependencies and build frontend
@@ -186,32 +175,48 @@ cd ..
 
 ## 3. Post-Installation Verification (`wizard doctor`)
 
-Run `wizard doctor` to perform comprehensive environment diagnostics across process supervisors, network ports, and OS sandbox boundaries:
+`wizard doctor` checks the installation without changing anything: which install method owns the files, whether `wizard` on your PATH is the one you expect, the platform, the config directory, and each prerequisite, with a fix for every problem it finds. It works before `wizard init` has ever run.
 
 ```bash
+wizard --version    # wizard CLI v1.0.13, backend API compat v4.0.0
 wizard doctor
 ```
 
-**Sample Diagnostic Output:**
+**Sample output** (your paths and versions will differ):
 
 ```log
-wizard status
-==============
-daemon:            healthy (supervisor pid=41208, uptime=14m22s)
-backend (8000):    running (pid=41209, healthy)
-frontend (3000):   running (pid=41210, healthy)
+Wizard 1.0.13  -  installation diagnostics
 
-config dir:        /Users/admin/Library/Application Support/Wizard
-logs dir:          /Users/admin/Library/Application Support/Wizard/logs
-  backend.log:     42.1 KB
-  frontend.log:    18.4 KB
-  daemon.log:      3.2 KB
+Diagnostics
+----------------------------------------------------------------
+  [ OK ]  Wizard CLI          v1.0.13, backend API compat v4.0.0
+  [ OK ]  Platform            darwin-arm64
+  [ OK ]  Installation        release installer  (/Users/you/.wizard/bin/wizard)
+  [ OK ]  On PATH             `wizard` runs from any directory
+  [ OK ]  Wizard files        /Users/you/.wizard/Wizard-v1.0.13-darwin-arm64
+  [ OK ]  Config directory    /Users/you/Library/Application Support/Wizard
+  [ OK ]  Python              3.14  /usr/local/bin/python3.14
+  [ OK ]  Node.js             22.11  /usr/local/bin/node
+  [ OK ]  uv                  0.12  /opt/homebrew/bin/uv
+  [ OK ]  pnpm                10.2  /opt/homebrew/bin/pnpm
+  [WARN]  Configuration       backend/.env not created yet
+     -> Run `wizard init` to configure a provider.
 
-API_PROVIDER:      gemini
-DATA_MODE:         cloud-only
-EXECUTION_BACKEND: host (enforced: +filesystem,network,processes -memory)
-SANDBOX_CAPABILITY: OS seatbelt active, Landlock ready
+10 passed  |  1 warning  |  0 failed
 ```
+
+`wizard doctor --json` prints the same report for scripts. Exit codes: `0` healthy, `1` failure, `2` usage error, `3` a prerequisite is missing or the installation is broken, `4` a network error. For the running service, use `wizard status`.
+
+## Updating and uninstalling
+
+```bash
+wizard update --check    # is a newer release available?
+wizard update            # installer installs; keeps your settings and the previous package
+wizard uninstall         # removes the program and its PATH entries, keeps your data
+wizard uninstall --purge # removes everything: settings, API keys, logs, the Python environment
+```
+
+`wizard update` sends `GITHUB_TOKEN` or `GH_TOKEN` to `api.github.com` if you have one set, which avoids GitHub's anonymous rate limit on shared networks. Behind a proxy, `HTTPS_PROXY`, `HTTP_PROXY` and `NO_PROXY` are honoured by the installers, the updater and model lookups.
 
 ---
 
