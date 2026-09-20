@@ -78,9 +78,11 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
           <span className="text-[#eca8d6] font-medium">{page.title}</span>
         </nav>
 
-        <Reveal key={slug}>
+        {/* The document body is the page. It renders immediately (a scroll-reveal
+            wrapper hid every document taller than ten screens until scrolled). */}
+        <div key={slug} className="motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
           <DocContent markdown={body} />
-        </Reveal>
+        </div>
 
         {/* Edit on GitHub link */}
         <div className="mt-14 flex items-center justify-between border-t border-white/10 pt-6 text-xs text-white/40">

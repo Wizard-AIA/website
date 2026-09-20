@@ -72,7 +72,9 @@ export function extractHeadings(markdown: string): DocHeading[] {
     const match = line.match(/^(#{2,3})\s+(.+)$/);
     if (match) {
       const text = match[2].trim();
-      headings.push({ depth: match[1].length, text, id: slugifyHeading(text) });
+      // The id is derived from the raw text (slugifyHeading drops backticks, and DocContent
+      // computes the same id from the rendered heading); the label shows no markdown.
+      headings.push({ depth: match[1].length, text: text.replace(/`/g, ""), id: slugifyHeading(text) });
     }
   }
   return headings;
