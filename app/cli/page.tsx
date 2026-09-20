@@ -8,7 +8,7 @@ import { Terminal, Shield, Cpu, RefreshCw, Zap, Layers, AlertCircle, CheckCircle
 
 export const metadata: Metadata = {
   title: "Enterprise CLI Reference — wizard",
-  description: "Complete command-line interface specification for Wizard: init, start, stop, doctor, attach, logs, update, skills, and environment orchestration.",
+  description: "Complete command-line interface specification for Wizard: init, start, stop, doctor, status, attach, logs, update, uninstall, delete, skills and version.",
   alternates: {
     canonical: "/cli",
   },
@@ -18,129 +18,135 @@ const CLI_COMMANDS = [
   {
     command: "wizard init",
     badge: "Lifecycle",
-    summary: "Guides first-run configuration, verifies toolchain, creates virtualenv, and compiles workbenches.",
+    summary: "Guided first-run setup: choose a provider and models, check prerequisites, install dependencies.",
     description:
-      "Validates Python 3.12+, Node 20+, uv, pnpm, and optional Ollama/Docker. Copies backend/.env.example if missing, builds the Next.js production frontend bundle, and registers service defaults.",
+      "On a terminal it is interactive: menus you move through with the arrow keys, an API key field that shows one bullet per character (never the key), and model lists fetched from your provider so you never type a model name or a URL. Python 3.12+, Node 20+, uv and pnpm are minimums, so any newer version you already have is used; only missing tools are installed. Scripts use --non-interactive.",
     flags: [
-      { flag: "--provider <name>", desc: "Primary LLM provider (ollama, lmstudio, gemini, anthropic, openai, custom_gateway)" },
+      { flag: "--provider <name>", desc: "Default provider (ollama, lmstudio, anthropic, openai, gemini, custom_gateway)" },
       { flag: "--data-mode <mode>", desc: "Data residency policy (local-only, hybrid, cloud-only)" },
-      { flag: "--embedding-provider <name>", desc: "Provider for vector embeddings (ollama, gemini, openai, custom_gateway, fastembed)" },
-      { flag: "--embedding-model <model>", desc: "Model identifier for vector embeddings (e.g. nomic-embed-text, gemini-embedding-001, text-embedding-3-small)" },
-      { flag: "--gemini-key <key>", desc: "Sets Google Gemini API key" },
-      { flag: "--anthropic-key <key>", desc: "Sets Anthropic Claude API key" },
-      { flag: "--openai-key <key>", desc: "Sets OpenAI API key" },
-      { flag: "--gateway-url <url>", desc: "Endpoint URL for custom OpenAI-compatible gateway (Groq, vLLM, OpenRouter)" },
-      { flag: "--gateway-key <key>", desc: "Bearer authorization token for custom gateway" },
-      { flag: "--interactive", desc: "Forces guided prompts for provider, privacy, models, embeddings, and credentials" },
-      { flag: "--non-interactive", desc: "Disables prompts for CI and scripted installs" },
-      { flag: "--lmstudio-key <key>", desc: "Sets LM Studio API key" },
-      { flag: "--pull-models", desc: "Triggers automated background pull of default reasoning, coding & embedding weights via Ollama" },
-      { flag: "--skip-frontend", desc: "Skips Node.js dependency installation and frontend bundle compilation" },
-      { flag: "--skip-backend", desc: "Skips Python virtualenv creation and package installation" },
+      { flag: "--manager-model <name>", desc: "Model for the manager role (skips the picker)" },
+      { flag: "--worker-model <name>", desc: "Model for the worker role (skips the picker)" },
+      { flag: "--embedding-provider <name>", desc: "Provider for embeddings (ollama, lmstudio, openai, gemini, custom_gateway)" },
+      { flag: "--embedding-model <model>", desc: "Embedding model (e.g. nomic-embed-text, gemini-embedding-001, text-embedding-3-small)" },
+      { flag: "--gemini-key / --anthropic-key / --openai-key / --lmstudio-key <key>", desc: "Write that provider's API key to backend/.env" },
+      { flag: "--gateway-url <url> / --gateway-key <key>", desc: "Endpoint and bearer token for a custom OpenAI-compatible gateway" },
+      { flag: "--base-url <url>", desc: "Point --provider at a proxy instead of its official endpoint" },
+      { flag: "--interactive", desc: "Force the guided prompts even when other flags are given" },
+      { flag: "--non-interactive", desc: "Never prompt; for CI and scripted installs (no network lookups)" },
+      { flag: "--install-prerequisites", desc: "Install missing Python, Node.js, uv and pnpm without asking" },
+      { flag: "--no-install-prerequisites", desc: "Only check prerequisites; never install" },
+      { flag: "--pull-models", desc: "Also pull a default manager, worker and embedding model through Ollama" },
     ],
   },
   {
     command: "wizard start",
     badge: "Supervisor",
-    summary: "Spawns detached background supervisor, starts control plane & frontend, and opens the browser.",
+    summary: "Launches the backend and frontend in the background and opens the browser.",
     description:
-      "Spawns the detached supervisor daemon (__supervise). Polls backend readiness, performs API compatibility handshakes, rotates logs at 10MB bounds, and forwards OS signals.",
+      "Starts the detached supervisor, waits until the backend answers healthy, checks its API version against this binary, then opens the workspace. Ports are validated (1-65535).",
     flags: [
-      { flag: "--backend-port <port>", desc: "Overrides backend control plane port (default: 8000)" },
-      { flag: "--frontend-port <port>", desc: "Overrides analytics workbench port (default: 3000)" },
-      { flag: "--no-browser", desc: "Suppresses automatic browser launch upon successful boot" },
-      { flag: "--provider <name>", desc: "Overrides active LLM provider for this execution run" },
-      { flag: "--data-mode <mode>", desc: "Overrides privacy data mode for this execution run" },
-      { flag: "--embedding-provider <name>", desc: "Overrides active embedding provider for this execution run" },
-      { flag: "--embedding-model <model>", desc: "Overrides active embedding model for this execution run" },
-    ],
-  },
-  {
-    command: "wizard delete",
-    badge: "Lifecycle",
-    summary: "Stops services and removes Wizard-managed local state safely.",
-    description:
-      "Requests confirmation in a terminal, then removes user configuration, credentials, connections, skills, logs, managed virtualenv, and backend/.env while preserving the installed checkout and CLI binary.",
-    flags: [
-      { flag: "--yes", desc: "Skip confirmation; useful for automation" },
-      { flag: "--keep-env", desc: "Preserve backend/.env while removing other managed state" },
+      { flag: "--backend-port <port>", desc: "Backend port (default 8000)" },
+      { flag: "--frontend-port <port>", desc: "Frontend port (default 3000)" },
+      { flag: "--no-browser", desc: "Do not open a browser once healthy" },
+      { flag: "--timeout <seconds>", desc: "How long to wait for the backend to become healthy (default 90)" },
     ],
   },
   {
     command: "wizard stop",
     badge: "Supervisor",
-    summary: "Gracefully terminates all background services and execution daemons.",
+    summary: "Stops the background services.",
     description:
-      "Idempotent process cleanup. Sends SIGTERM to supervisor and process groups; falls back to forced termination of recorded PIDs if processes fail to exit within deadline.",
+      "Idempotent. Asks the supervisor to stop and waits for it to clean up; falls back to a forced stop of the recorded processes if it does not exit in time.",
     flags: [],
   },
   {
     command: "wizard doctor",
     badge: "Diagnostics",
-    summary: "Performs full operational health audit and diagnostics check.",
+    summary: "Checks this installation and tells you how to fix what is wrong.",
     description:
-      "Inspects supervisor PID files, active network listeners, log disk usage, OS kernel sandbox enforcement (Landlock, seccomp, Apple Seatbelt), and live backend /api/config state.",
-    flags: [],
+      "A read-only report with PASS, WARN or FAIL for the version, platform, install method, whether wizard is on your PATH, the bundled files, the settings directory, Python, Node, uv and pnpm, your configuration and credentials, and the running service. It works even when the bundled files cannot be found. Exits 3 if a check fails.",
+    flags: [
+      { flag: "--json", desc: "Print the report as JSON, for scripts and support tickets" },
+      { flag: "--network", desc: "Also test GitHub Releases and your configured model provider" },
+    ],
   },
   {
     command: "wizard status",
     badge: "Diagnostics",
-    summary: "Alias for wizard doctor. Reports cluster state and active configurations.",
-    description: "Renders active service status, uptime, PID mapping, and data mode policies.",
+    summary: "Shows what is running and the active configuration.",
+    description:
+      "Daemon, backend and frontend state, log sizes, API_PROVIDER, DATA_MODE and EXECUTION_BACKEND, plus the backend's own /api/config (host sizing, sandbox capability) when it answers.",
     flags: [],
   },
   {
     command: "wizard attach",
     badge: "Observability",
-    summary: "Multiplexes and live-streams backend and frontend logs to terminal.",
-    description:
-      "Connects to rotating log streams, rendering real-time colored output with source prefixes (backend/frontend) until Ctrl+C.",
+    summary: "Follows the backend and frontend logs live.",
+    description: "Prints status, then streams both logs with source prefixes until Ctrl+C. Read-only.",
     flags: [],
   },
   {
     command: "wizard logs",
     badge: "Observability",
-    summary: "Prints log file paths and dumps recent output lines.",
-    description: "One-shot diagnostic tool to inspect log locations and recent crash/event markers.",
+    summary: "Prints log file locations and recent output.",
+    description: "A one-shot look at where the logs are and, with --tail, their last lines.",
     flags: [
-      { flag: "--tail <N>", desc: "Outputs the last N lines across backend.log and frontend.log" },
+      { flag: "--tail <N>", desc: "Also print the last N lines of each log" },
     ],
   },
   {
     command: "wizard update",
     badge: "Lifecycle",
-    summary: "Pulls latest Git revisions, updates dependencies, and restarts services.",
+    summary: "Updates Wizard, using the right mechanism for how it was installed.",
     description:
-      "Executes git pull --ff-only, updates lockfile dependencies via uv/pnpm, verifies compatibility targets, and restarts active supervisor daemons.",
-    flags: [],
+      "For an installer-managed install it checks GitHub Releases, verifies the archive's SHA-256, stages and prepares the new release, then switches over, keeping the previous one for rollback. A git checkout uses git pull --ff-only. It never overwrites files a package manager owns: on Homebrew or Scoop it prints the command to run (brew upgrade wizard, scoop update wizard).",
+    flags: [
+      { flag: "--check", desc: "Only report whether a newer release exists" },
+      { flag: "--self", desc: "Force the release-install update path" },
+    ],
+  },
+  {
+    command: "wizard uninstall",
+    badge: "Lifecycle",
+    summary: "Removes Wizard; --purge removes everything.",
+    description:
+      "Removes what the official installer created (program, shell startup entries, and on Windows the user PATH entry) and keeps your settings, keys and logs, backing up backend/.env. With --purge it also deletes your data, and lists exactly what it will remove before asking. It refuses git checkouts and package-manager installs, and prints brew uninstall wizard or scoop uninstall wizard instead.",
+    flags: [
+      { flag: "--purge, --all", desc: "Also delete settings, API keys, logs and the Python environment" },
+      { flag: "--yes", desc: "Skip the confirmation prompt (unattended runs without it are refused)" },
+    ],
+  },
+  {
+    command: "wizard delete",
+    badge: "Lifecycle",
+    summary: "Stops Wizard and deletes its data; the program stays installed.",
+    description:
+      "Removes user configuration, credentials, connections, skills, logs, the managed virtualenv and backend/.env, after confirmation.",
+    flags: [
+      { flag: "--yes", desc: "Skip confirmation; useful for automation" },
+      { flag: "--keep-env", desc: "Keep backend/.env while removing other managed state" },
+    ],
   },
   {
     command: "wizard skills",
     badge: "Ecosystem",
-    summary: "Manages modular corporate analytical skills and domain playbooks.",
+    summary: "Manages modular analytical skills and domain playbooks.",
     description:
-      "Fronts the declarative skill engine with static AST security verification and commit pinning.",
+      "Fronts the skill engine with a preview of exactly what will be installed and commit pinning.",
     flags: [
       { flag: "list", desc: "Lists all installed skills, source repositories, and active tiers" },
-      { flag: "add <url>", desc: "Installs a remote skill repository with AST preview and commit pinning" },
-      { flag: "update <name>", desc: "Updates an installed skill to latest remote revision" },
+      { flag: "add <url>", desc: "Installs a remote skill repository with a preview and commit pinning" },
+      { flag: "update <name>", desc: "Updates an installed skill to the latest remote revision" },
       { flag: "discard <name>", desc: "Discards local modifications to an installed skill" },
-      { flag: "remove <name>", desc: "Safely uninstalls and deletes a skill package" },
-      { flag: "token <token>", desc: "Saves GitHub Personal Access Token for private enterprise skill repos" },
+      { flag: "remove <name>", desc: "Removes a skill package" },
+      { flag: "token <token>", desc: "Saves a GitHub personal access token for private skill repositories" },
     ],
-  },
-  {
-    command: "wizard env",
-    badge: "Configuration",
-    summary: "Validates and displays resolved runtime configuration settings.",
-    description: "Inspects effective environment settings across .env, system environment, and credentials store.",
-    flags: [],
   },
   {
     command: "wizard version",
     badge: "Metadata",
-    summary: "Outputs CLI binary version, build hash, and backend API target.",
-    description: "Displays compile-time compatibility markers (e.g. wizard CLI, backend API compat v4.0.0).",
+    summary: "Prints the CLI version and the backend API it targets.",
+    description: "For example: wizard CLI v1.0.13, backend API compat v4.0.0. Makes no network request; use wizard update --check to look for a newer release.",
     flags: [],
   },
 ]
@@ -157,7 +163,7 @@ const SETUP_RECIPES = [
     name: "Cloud-Native (Gemini / Claude / OpenAI)",
     icon: Zap,
     tagline: "Frontier cloud intelligence with telemetry tracking.",
-    command: "wizard init --provider gemini --gemini-key AQ.Ab8RN6... --data-mode cloud-only",
+    command: "wizard init --provider gemini --gemini-key <your-gemini-key> --data-mode cloud-only",
     notes: "Dispatches planning and code generation directly to Gemini 2.5 Flash with sub-second latency.",
   },
   {
@@ -177,10 +183,11 @@ const SETUP_RECIPES = [
 ]
 
 const EXIT_CODES = [
-  { code: "0", name: "SUCCESS", description: "Operation completed successfully." },
-  { code: "1", name: "GENERAL_ERROR", description: "Operational or runtime error. Inspect wizard doctor for root cause." },
-  { code: "2", name: "PORT_CONFLICT", description: "Port 8000 or 3000 is occupied by an external process." },
-  { code: "3", name: "DEPENDENCY_MISSING", description: "Required prerequisite (Python 3.12, Node 20, or uv) was not found on PATH." },
+  { code: "0", name: "SUCCESS", description: "The command succeeded (including --help)." },
+  { code: "1", name: "FAILURE", description: "Any other runtime failure. Run wizard doctor for a diagnosis." },
+  { code: "2", name: "USAGE", description: "A bad command line or an invalid value, such as a stray argument or a port outside 1-65535." },
+  { code: "3", name: "ENVIRONMENT", description: "A required tool is missing or the installation is broken. wizard doctor says what to fix." },
+  { code: "4", name: "NETWORK", description: "A release lookup or download failed. Check your connection or set HTTPS_PROXY." },
 ]
 
 export default function CliPage() {
@@ -207,11 +214,11 @@ export default function CliPage() {
         <Reveal className="mt-10 p-5 rounded-xl border border-white/10 bg-black/60 backdrop-blur-md">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <div className="text-xs font-mono uppercase tracking-wider text-white/40 mb-1">Global Installation via Homebrew</div>
+              <div className="text-xs font-mono uppercase tracking-wider text-white/40 mb-1">Global Installation via Homebrew (macOS, Linux)</div>
               <div className="text-sm text-white/80 font-medium">Install Wizard globally with a single command</div>
             </div>
             <div className="w-full sm:w-auto">
-              <CopyCommand command="brew tap Wizard-AIA/wizard && brew install wizard" />
+              <CopyCommand command="brew install Wizard-AIA/wizard/wizard" />
             </div>
           </div>
         </Reveal>
@@ -221,7 +228,7 @@ export default function CliPage() {
           <Reveal>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-display text-white">Command Reference</h2>
-              <span className="text-xs font-mono text-white/40">12 Subcommands</span>
+              <span className="text-xs font-mono text-white/40">{CLI_COMMANDS.length} Subcommands</span>
             </div>
           </Reveal>
           

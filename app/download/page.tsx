@@ -79,12 +79,12 @@ export default async function DownloadPage() {
               {
                 id: "mac",
                 label: "macOS (Homebrew)",
-                command: "brew tap Wizard-AIA/wizard && brew install wizard && wizard init && wizard start",
+                command: "brew install Wizard-AIA/wizard/wizard && wizard init && wizard start",
               },
               {
                 id: "linux",
                 label: "Linux (Curl)",
-                command: "curl -fsSL https://wizardw2.vercel.app/install.sh | bash",
+                command: "curl -fsSL https://wizardw2.vercel.app/install.sh | sh",
               },
               {
                 id: "windows-ps",
@@ -94,7 +94,7 @@ export default async function DownloadPage() {
               {
                 id: "scoop",
                 label: "Windows (Scoop)",
-                command: "scoop install https://wizardw2.vercel.app/wizard.json",
+                command: "scoop install https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/wizard.json",
               },
               {
                 id: "docker",

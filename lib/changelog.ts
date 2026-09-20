@@ -13,6 +13,39 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "v1.0.13",
+    tag: "v1.0.13",
+    kind: "feature",
+    title: "Installation, Upgrade & Setup Overhaul",
+    date: "2026-09-20",
+    highlights: [
+      {
+        title: "Homebrew Installs Again",
+        body: "`brew install Wizard-AIA/wizard/wizard` failed on every Mac with a checksum error. Package metadata is now generated from each release's published checksums, so the formula can no longer drift from the archives.",
+      },
+      {
+        title: "Updates That Work",
+        body: "`wizard update` was rejected by its own checksum parser from v1.0.10 to v1.0.12. It now works, is package-manager aware (Homebrew and Scoop upgrade through their own commands), and restarts your service if an update fails.",
+      },
+      {
+        title: "Clean Installers Everywhere",
+        body: "One-line installers for macOS, Linux and Windows verify the archive checksum, set up PATH for zsh, bash, fish or PowerShell (keeping your existing entries), and are safe to run again.",
+      },
+      {
+        title: "Guided Setup With Real Menus",
+        body: "`wizard init` masks your API key with a receipt, lists only the models your provider actually offers, and uses arrow-key dropdowns instead of asking you to type model names or URLs.",
+      },
+      {
+        title: "Use What You Already Have",
+        body: "Python, Node.js, uv and pnpm requirements are minimums. Newer versions, and tools installed through nvm, fnm, Volta, asdf or mise, are used as they are; only missing tools are installed.",
+      },
+      {
+        title: "Diagnose and Remove Cleanly",
+        body: "`wizard doctor` reports what is wrong with a fix for each problem, `wizard uninstall` removes the program and its PATH entries, and `wizard uninstall --purge` removes your data too.",
+      },
+    ],
+  },
+  {
     version: "v1.0.12",
     tag: "v1.0.12",
     kind: "feature",

@@ -14,6 +14,18 @@ export default [
     ],
   },
   {
+    // Plain Node scripts (release sync and its tests), not part of the Next.js app.
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        URL: "readonly",
+        structuredClone: "readonly",
+      },
+    },
+  },
+  {
     rules: {
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unused-vars": ["warn", { 

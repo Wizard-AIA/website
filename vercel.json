@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/install.sh", "destination": "https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/install.sh", "permanent": false },
+    { "source": "/install.ps1", "destination": "https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/install.ps1", "permanent": false },
+    { "source": "/wizard.json", "destination": "https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/wizard.json", "permanent": false }
+  ]
+}

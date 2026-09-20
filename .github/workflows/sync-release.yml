@@ -1,0 +1,83 @@
+name: Sync release
+
+# The Wizard-w2 release is the single source of truth for the current version,
+# download links and checksums. This workflow pulls the release.json asset that
+# every Wizard release publishes into lib/release.json, and Vercel redeploys the
+# site from the resulting commit. Nothing here is edited by hand, and reading the
+# manifest needs no credential: it is a public release asset.
+#
+#   schedule            catches any release even if nobody dispatched anything
+#   workflow_dispatch   "Run workflow" button, for an immediate sync
+#   repository_dispatch sent by Wizard-w2's release workflow when it has a
+#                       PACKAGING_PUSH_TOKEN secret (event type: wizard-release)
+#
+# Writing it back: main is protected (changes go through pull requests). With the
+# optional SYNC_PUSH_TOKEN secret (a token of someone allowed to bypass that) the
+# commit goes straight to main. Without it the workflow opens or updates a pull
+# request from automation/sync-release, which needs the repository setting
+# Settings > Actions > General > "Allow GitHub Actions to create and approve pull
+# requests". If neither is available the run fails and says so.
+
+on:
+  schedule:
+    - cron: "23 */3 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [wizard-release]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-release
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Pull the latest release manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          token: ${{ secrets.SYNC_PUSH_TOKEN || github.token }}
+
+      - name: Fetch the latest release manifest
+        run: |
+          curl -fsSL --retry 3 --retry-delay 5 \
+            -o "$RUNNER_TEMP/release.json" \
+            "https://github.com/Wizard-AIA/Wizard-w2/releases/latest/download/release.json"
+
+      - name: Validate it and update lib/release.json
+        id: sync
+        run: |
+          node --test scripts/
+          node scripts/sync-release.mjs "$RUNNER_TEMP/release.json" lib/release.json
+
+      - name: Publish the new manifest
+        if: steps.sync.outputs.changed == 'true'
+        env:
+          TAG: ${{ steps.sync.outputs.tag }}
+          GH_TOKEN: ${{ secrets.SYNC_PUSH_TOKEN || github.token }}
+        run: |
+          set -eu
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/release.json
+          git commit -m "chore(release): sync release manifest to $TAG"
+
+          if git push origin HEAD:main; then
+            exit 0
+          fi
+          echo "::notice::main does not accept a direct push from this token; using a pull request"
+
+          git push --force origin HEAD:refs/heads/automation/sync-release
+          title="chore(release): sync release manifest to $TAG"
+          body="Automated: pulls the release manifest published with Wizard $TAG into lib/release.json. Merge to update the version, download links and checksums on the site."
+          existing="$(gh pr list --head automation/sync-release --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --title "$title" --body "$body"
+          else
+            gh pr create --base main --head automation/sync-release --title "$title" --body "$body"
+          fi

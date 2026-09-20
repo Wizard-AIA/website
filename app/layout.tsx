@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Instrument_Sans, Instrument_Serif, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { LATEST_VERSION } from '@/lib/wizard'
 import './globals.css'
 
 const instrumentSans = Instrument_Sans({ 
@@ -127,7 +128,7 @@ const jsonLd = {
       description: 'An open-source local AI Data Analyst workspace that investigates, writes and executes Python/SQL code, verifies results, and renders interactive visualizations.',
       url: 'https://wizardw2.vercel.app',
       downloadUrl: 'https://wizardw2.vercel.app/download',
-      softwareVersion: '1.0.12',
+      softwareVersion: LATEST_VERSION,
       license: 'https://opensource.org/licenses/BSD-3-Clause',
       author: {
         '@type': 'Person',
