@@ -42,7 +42,8 @@ export function validate(manifest) {
     if (asset.name !== `Wizard-${manifest.tag}-${platform}.zip`) return `unexpected asset name ${asset.name}`;
     if (asset.url !== `${base}${asset.name}`) return `${asset.name}: url is not on this release`;
     if (!/^[0-9a-f]{64}$/.test(asset.sha256 ?? "")) return `${asset.name}: sha256 is not 64 hex characters`;
-    if (!Number.isInteger(asset.size) || asset.size <= 0) return `${asset.name}: size is not positive`;
+    // release.py leaves size out when it had no archives to measure; the site copes with that.
+    if (asset.size !== undefined && (!Number.isInteger(asset.size) || asset.size <= 0)) return `${asset.name}: size is not positive`;
     seen.add(platform);
   }
   const missing = PLATFORMS.filter((p) => !seen.has(p));

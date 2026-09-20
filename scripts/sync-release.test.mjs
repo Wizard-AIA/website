@@ -45,6 +45,18 @@ test("rejects a checksum that is not sha256", () => {
   assert.match(validate(m), /sha256/);
 });
 
+test("accepts a manifest whose assets carry no size, as release.py renders when it has no archives", () => {
+  const m = clone();
+  for (const a of m.assets) delete a.size;
+  assert.equal(validate(m), null);
+});
+
+test("rejects a size that is present but not positive", () => {
+  const m = clone();
+  m.assets[0].size = 0;
+  assert.match(validate(m), /size is not positive/);
+});
+
 test("rejects a manifest missing a platform", () => {
   const m = clone();
   m.assets = m.assets.filter((a) => !(a.os === "windows" && a.arch === "amd64"));

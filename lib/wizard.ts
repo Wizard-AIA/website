@@ -47,7 +47,8 @@ const FALLBACK_RELEASE: ReleaseInfo = {
   publishedAt: "",
   htmlUrl: `${REPO_URL}/releases/tag/${releaseData.tag}`,
   live: false,
-  assets: releaseData.assets.map((a) => ({ name: a.name, url: a.url, sizeBytes: a.size ?? 0 })),
+  // size is optional in release.json (release.py omits it when it had no archives to measure)
+  assets: (releaseData.assets as { name: string; url: string; size?: number }[]).map((a) => ({ name: a.name, url: a.url, sizeBytes: a.size ?? 0 })),
 };
 
 export async function getLatestRelease(): Promise<ReleaseInfo> {
