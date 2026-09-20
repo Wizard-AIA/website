@@ -81,7 +81,7 @@ export function DocCodeBlock({ code, language }: { code: string; language: strin
   const lines = code.split("\n")
 
   return (
-    <div className="group relative my-6 w-full max-w-full min-w-0 overflow-hidden rounded-xl border border-white/10 bg-black/80 shadow-md backdrop-blur">
+    <div className="group relative my-6 w-full max-w-full min-w-0 overflow-hidden rounded-xl border border-white/10 bg-black/80 shadow-md">
       {/* Code Header Bar */}
       <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-3.5 sm:px-4 py-2 text-xs font-mono">
         <div className="flex items-center gap-2 text-white/50">

@@ -78,9 +78,10 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
           <span className="text-[#eca8d6] font-medium">{page.title}</span>
         </nav>
 
-        {/* The document body is the page. It renders immediately (a scroll-reveal
-            wrapper hid every document taller than ten screens until scrolled). */}
-        <div key={slug} className="motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
+        {/* The document body is the page. It renders immediately and is never animated: a
+            scroll-reveal wrapper hid every document taller than ten screens until scrolled, and a
+            fade left a fill-forwards animation on a 10,000px element, which flickered on scroll. */}
+        <div key={slug}>
           <DocContent markdown={body} />
         </div>
 
