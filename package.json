@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "node --test scripts/"
+    "test": "node --test scripts/*.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

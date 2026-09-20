@@ -52,7 +52,7 @@ jobs:
       - name: Validate it and update lib/release.json
         id: sync
         run: |
-          node --test scripts/
+          node --test scripts/*.test.mjs
           node scripts/sync-release.mjs "$RUNNER_TEMP/release.json" lib/release.json
 
       - name: Publish the new manifest
