@@ -47,7 +47,7 @@ curl -fsSL https://wizardw2.vercel.app/install.sh | sh
 Options go after `sh -s --`:
 
 ```bash
-curl -fsSL https://wizardw2.vercel.app/install.sh | sh -s -- --version 1.0.14 --no-modify-path
+curl -fsSL https://wizardw2.vercel.app/install.sh | sh -s -- --version 1.0.15 --no-modify-path
 # --version X.Y.Z   --install-dir DIR   --no-modify-path   --force   --verbose
 ```
 
@@ -80,7 +80,7 @@ wizard start
 With options:
 
 ```powershell
-& ([scriptblock]::Create((irm https://wizardw2.vercel.app/install.ps1))) -Version 1.0.14 -NoModifyPath
+& ([scriptblock]::Create((irm https://wizardw2.vercel.app/install.ps1))) -Version 1.0.15 -NoModifyPath
 ```
 
 Windows on ARM is not supported yet; the installer says so and exits with code 3 instead of downloading anything.
@@ -106,8 +106,8 @@ Take the archive for your platform (`Wizard-v<version>-<os>-<arch>.zip`) and `SH
 sha256sum -c --ignore-missing SHA256SUMS        # Linux
 shasum -a 256 -c --ignore-missing SHA256SUMS    # macOS
 
-unzip Wizard-v1.0.14-darwin-arm64.zip
-cd Wizard-v1.0.14-darwin-arm64
+unzip Wizard-v1.0.15-darwin-arm64.zip
+cd Wizard-v1.0.15-darwin-arm64
 ./cli/wizard init
 ./cli/wizard start
 ```
@@ -178,22 +178,22 @@ cd ..
 `wizard doctor` checks the installation without changing anything: which install method owns the files, whether `wizard` on your PATH is the one you expect, the platform, the config directory, and each prerequisite, with a fix for every problem it finds. It works before `wizard init` has ever run.
 
 ```bash
-wizard --version    # wizard CLI v1.0.14, backend API compat v4.0.0
+wizard --version    # wizard CLI v1.0.15, backend API compat v4.0.0
 wizard doctor
 ```
 
 **Sample output** (your paths and versions will differ):
 
 ```log
-Wizard 1.0.14  -  installation diagnostics
+Wizard 1.0.15  -  installation diagnostics
 
 Diagnostics
 ----------------------------------------------------------------
-  [ OK ]  Wizard CLI          v1.0.14, backend API compat v4.0.0
+  [ OK ]  Wizard CLI          v1.0.15, backend API compat v4.0.0
   [ OK ]  Platform            darwin-arm64
   [ OK ]  Installation        release installer  (/Users/you/.wizard/bin/wizard)
   [ OK ]  On PATH             `wizard` runs from any directory
-  [ OK ]  Wizard files        /Users/you/.wizard/Wizard-v1.0.14-darwin-arm64
+  [ OK ]  Wizard files        /Users/you/.wizard/Wizard-v1.0.15-darwin-arm64
   [ OK ]  Config directory    /Users/you/Library/Application Support/Wizard
   [ OK ]  Python              3.14  /usr/local/bin/python3.14
   [ OK ]  Node.js             22.11  /usr/local/bin/node

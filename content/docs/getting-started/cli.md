@@ -213,7 +213,7 @@ Outputs the CLI version and the backend API compatibility target. It makes no ne
 
 ```bash
 wizard version            # also: wizard --version
-# Output: wizard CLI v1.0.14, backend API compat v4.0.0
+# Output: wizard CLI v1.0.15, backend API compat v4.0.0
 ```
 
 Global flags go before the command: `wizard --no-color doctor`, `wizard --verbose update`. `NO_COLOR` also disables colour, and `wizard help <command>` shows a command's flags.

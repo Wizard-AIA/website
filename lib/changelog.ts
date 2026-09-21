@@ -13,6 +13,27 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "v1.0.15",
+    tag: "v1.0.15",
+    kind: "feature",
+    title: "Uploads and Chat Stay in One Session",
+    date: "2026-09-21",
+    highlights: [
+      {
+        title: "No More \"I Need a Dataset\" After a Restart",
+        body: "After a backend restart, a tab left open could upload your file to one session while the chat stayed attached to another, so asking about the file answered \"I need a dataset for that.\" The chat now follows the session your uploads went to.",
+      },
+      {
+        title: "Running Turns Are Never Interrupted",
+        body: "If the session changes mid-turn, the chat moves after the turn ends, including after Stop, after clearing the chat, or when a queued message is handed back.",
+      },
+      {
+        title: "Other Tabs Count Too",
+        body: "A session stored by another tab moves this tab's chat as well, and a session the server replaces mid-connection is adopted in one step. Reload an already open tab after upgrading so it loads the fix.",
+      },
+    ],
+  },
+  {
     version: "v1.0.14",
     tag: "v1.0.14",
     kind: "feature",
