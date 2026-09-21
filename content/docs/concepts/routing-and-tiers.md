@@ -4,16 +4,28 @@ Not every turn needs the same amount of model compute. Wizard classifies each in
 
 ---
 
-## 1. In-Process SLM Intent Router
+## 1. Turn Routing
 
-Before an analytical loop is scheduled, an in-process **SLM Router** (`SLMRouter`) performs intent classification in sub-10ms:
+Before any model runs, Wizard routes each message to the smallest workflow that serves it. Every message used to run plan, loop, verify, answer, so a `hi` after an analysis planned, wrote code and ran it. The router is deterministic: no model call and no I/O. It reads evidence from the message and the session, such as which of your column names the message mentions and which operations it asks for, instead of matching phrases. A message with no task evidence is a conversation, whatever its wording.
 
-| Intent Class | Description | Routing Decision | Typical Latency |
+| Workflow | What it is for | What runs | Model calls |
 |---|---|---|:---:|
-| **`METADATA`** | Column lists, table schemas, dataset shapes, row counts. | Synthesizes response immediately from catalog memory without spinning up agent turn. | `< 10ms` |
-| **`CHITCHAT`** | Greetings, operational inquiries, help commands. | Handled directly via lightweight templates or fast SLM. | `< 50ms` |
-| **`LIGHTWEIGHT`** | Simple scalar filtering, distinct value inspection, single-pass counts. | Dispatched to compact Worker model (`1.5B`–`3B`) with single-step plan. | `< 1.5s` |
-| **`DEEP`** | Multi-table joins, causal modeling, hypothesis testing, ML training. | Enters full `ExecutionDAG` multi-agent loop with adversarial verification. | Streaming |
+| **converse** | Greetings, thanks, "what can you do?" | One reply. No dataset access, no tools. | 1 |
+| **inspect** | Columns, types, row counts, "what is in this table?" | The facts are read from the data frame, then written up. No code runs. | 1 |
+| **direct** | One number or one chart | Write code, run it, answer. No planner and no verification. | 2 |
+| **agentic** | A multi-step investigation | Plan, loop (decide, code, run), verify, answer. | 5 or more |
+| **plan_only** | "Make a plan, do not run it" | The plan, then it stops and waits for you. | 1 |
+| **execute_plan** | "Go ahead" after a plan | Runs the plan you confirmed, against the question it was made for. | varies |
+
+Complexity is the number of independent steps, not the length of the message: two aggregations are one step, an aggregation plus a model plus a report are three.
+
+### When the router is unsure
+
+If a message is probably conversation but could be a request, or is in a language the router does not know, it replies conversationally. The reply is itself the classifier: the model either answers normally or signals that it needs the data, and the same turn then continues as an analysis. No separate router model is called. With no dataset loaded the reply says what is missing.
+
+### Depth is a preference
+
+**Auto**, **Fast** and **Deep** stay until you change them. They change how hard Wizard works on an analytic message and never what the message is: Fast skips the planner and verification, Deep runs the full verified investigation, and a greeting costs one call in every mode. An explicit request for a plan is honoured in all of them.
 
 ---
 
@@ -22,7 +34,7 @@ Before an analytical loop is scheduled, an in-process **SLM Router** (`SLMRouter
 Wizard independently routes three model roles:
 
 ```diagram
-User Query ──► SLM Intent Router ──► [Manager Role]    (Planning & Synthesis)
+User Query ──► Turn Router       ──► [Manager Role]    (Planning & Synthesis)
                                  ──► [Embedding Role]  (Vector RAG & Search)
                                  ──► [Worker Role]     (Code & Sandbox)
 ```

@@ -15,14 +15,14 @@ The Next.js client and the FastAPI backend communicate over a streaming WebSocke
                                              │
                                              ▼
                      ┌───────────────────────────────────────────────┐
-                     │          In-Process SLM Intent Router         │
+                     │          Turn Router (no model call)          │
                      └───────┬───────────────────────┬───────────────┘
                              │                       │
-         Metadata / Chitchat │                       │ Analytical Investigation
+      Chat / Schema / Figure │                       │ Analytical Investigation
                              ▼                       ▼
             ┌─────────────────────┐       ┌─────────────────────────────────────┐
-            │  Instant Fast-Path  │       │ 1. MANAGER ROLE (Reasoning/Planner) │
-            │ (Sub-10ms response) │       │ - Formulates analytical hypotheses  │
+            │   Light Workflows   │       │ 1. MANAGER ROLE (Reasoning/Planner) │
+            │  (1-2 model calls)  │       │ - Formulates analytical hypotheses  │
             └─────────────────────┘       │ - Plans multi-step investigation    │
                                           │ - Coordinates DAG execution graph   │
                                           │ - Synthesizes verified final report │
@@ -49,7 +49,7 @@ The Next.js client and the FastAPI backend communicate over a streaming WebSocke
 ```
 
 Per turn, the control plane coordinates:
-1. **SLM Intent Classification:** An in-process router fast-tracks lightweight metadata, column lists, and conversational chitchat in sub-10ms, bypassing heavy reasoning loops.
+1. **Turn Routing:** Before any model runs, a deterministic router reads evidence from the message and the session and picks the smallest workflow that serves it: a reply, a schema answer, a single code call, or the full investigation. See [Smart Task Routing](routing-and-tiers.md).
 2. **Stateful DAG Execution:** Complex questions are modeled as an `ExecutionDAG` with topological dependency ordering and automatic cycle detection.
 3. **Retrieval & Context:** The Manager consults the **Embedding Role** via hybrid search (`sqlite-vec` KNN + FTS5 BM25 + Reciprocal Rank Fusion + FlashRank Cross-Encoder).
 4. **Sandboxed Code Synthesis:** The **Worker Role** authors code executed inside an isolated OS container or subprocess.

@@ -146,7 +146,7 @@ const CLI_COMMANDS = [
     command: "wizard version",
     badge: "Metadata",
     summary: "Prints the CLI version and the backend API it targets.",
-    description: "For example: wizard CLI v1.0.13, backend API compat v4.0.0. Makes no network request; use wizard update --check to look for a newer release.",
+    description: "For example: wizard CLI v1.0.14, backend API compat v4.0.0. Makes no network request; use wizard update --check to look for a newer release.",
     flags: [],
   },
 ]

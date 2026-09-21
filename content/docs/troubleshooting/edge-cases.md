@@ -33,9 +33,10 @@ Wizard is engineered around deterministic containment, graceful degradation, and
   - **Manager (Planner)**: Use standard instruct models (`qwen2.5:3b`, `llama3.2:3b`, `gemini-2.5-flash`, `claude-3-5-haiku`).
   - **Worker (Coder)**: Reasoning or coding models (`qwen2.5-coder:7b`, `gemini-2.5-flash`, `claude-3-5-sonnet`).
 
-### Missing Optional Provider Dependencies
-- **Symptom**: `LLMUnavailableError: Provider 'openai' is configured, but langchain-openai is not installed.`
-- **Remediation**: Install provider extras via `uv pip install langchain-openai` or configure `API_PROVIDER=gemini` or `API_PROVIDER=ollama`.
+### Missing Provider Package
+- **Symptom**: An `LLMUnavailableError` saying OpenAI, Gemini and gateway support needs the `langchain-openai` package, or that Anthropic support needs `langchain-anthropic`.
+- **Root Cause**: Since v1.0.14 every provider client is part of the base install (`requirements.txt`), so this means the environment was built without it: an older install, or a hand-built environment.
+- **Remediation**: Run `wizard update`, or `uv pip install -r requirements.txt`. To carry on without a cloud provider, set `API_PROVIDER=ollama`.
 
 ### Embedding Server Backoff & Lexical Fallback
 - **Behavior**: If an embedding endpoint (e.g. `embeddinggemma` on Ollama) is unreachable or fails during indexing, Wizard does not crash. It applies exponential backoff and automatically falls back to an in-process lexical hashing encoder to preserve RAG retrieval functionality.

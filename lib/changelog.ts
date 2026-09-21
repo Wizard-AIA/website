@@ -13,6 +13,39 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "v1.0.14",
+    tag: "v1.0.14",
+    kind: "feature",
+    title: "Chat That Answers What You Asked",
+    date: "2026-09-21",
+    highlights: [
+      {
+        title: "Hi Is Just Hi",
+        body: "A greeting or a thank-you is one reply. Before, saying `hi` after an analysis planned, wrote code and ran it. Every message is now routed before any model runs, to the smallest workflow that serves it.",
+      },
+      {
+        title: "Right-Sized Answers",
+        body: "A question about your columns is answered from the data in one call, a single number is one code call and an answer, and a complex investigation keeps the full plan, loop and verification.",
+      },
+      {
+        title: "Stop Means Stop",
+        body: "Stop ends the turn and leaves the composer usable, typing \"stop\" cancels a running task, and a message sent mid-run comes back to the composer instead of failing it. Auto, Fast and Deep change how hard Wizard works, never what your message is.",
+      },
+      {
+        title: "Cloud Models Work Out of the Box",
+        body: "The OpenAI, Gemini, LM Studio, gateway and Anthropic clients ship with the base install, PDF and Word context documents work without an extra step, and `wizard init` no longer pulls in Redis and database drivers just to get a cloud client.",
+      },
+      {
+        title: "Pre-Release Channel",
+        body: "Opt in to beta builds with `wizard channel pre-release` or `wizard update --pre-release`. Stable installs, Homebrew, Scoop and this site only ever follow stable releases, and Wizard never downgrades.",
+      },
+      {
+        title: "Safer Sessions",
+        body: "One turn at a time per session on every transport, reviewers and chart descriptions follow your data policy, and code that never ran is no longer cached as an answer.",
+      },
+    ],
+  },
+  {
     version: "v1.0.13",
     tag: "v1.0.13",
     kind: "feature",
